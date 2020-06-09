@@ -81,7 +81,7 @@ const VacancyModal = (props) => {
 						{
 							props.data.company.phone
 								?
-								<a href={"tel:+" + props.data.company.phone}>{props.data.company.phone}</a>
+								<a href={"tel:" + props.data.company.phone}>{props.data.company.phone}</a>
 								:
 								<span>Не указан</span>
 						}
