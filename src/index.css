@@ -20,6 +20,10 @@ code {
   min-height: var(--pageHeight);
 }
 
+.pageTitle {
+  font-size: 24px;
+}
+
 .footerText {
   font-size: 14px !important;
 }
