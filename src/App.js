@@ -5,6 +5,7 @@ import Layout from "./hoc/Layout/Layout";
 import Header from "./components/Header/Header";
 import SearchPage from "./containers/SearchPage/SearchPage";
 import {Switch, Route, Redirect} from "react-router-dom"
+import Footer from "./components/Footer/Footer";
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 					<Redirect to="/"/>
 				</Route>
 			</Switch>
+			<Footer/>
 		</Layout>
 	);
 }

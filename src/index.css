@@ -13,9 +13,17 @@ code {
 }
 
 :root {
-  --pageHeight: calc(100vh - 112px);
+  --pageHeight: calc(100vh - 96px);
 }
 
 .SearchPage {
   min-height: var(--pageHeight);
+}
+
+.footerText {
+  font-size: 14px !important;
+}
+
+.footerText:hover {
+  color: #ffffff !important;
 }
