@@ -8,18 +8,24 @@ import VacancyPagePagination from "../../components/VacancyPagePagination/Vacanc
 export default class SearchPage extends Component {
 
 	state = {
+		pageTitle: 'Вакансии, обновленные за последние сутки:',
 		searchQuery: '',
 		vacancy: [],
 		vacancyDetail: null,
 		region: 6600000000000,
 		vacancyOpen: false,
-		// Параметры для пагинации
 		vacancyOnPage: [],
 		currentPage: 1,
 		vacancyPerPage: 10
 	}
 
 	paginationClickHandler = (event) => {
+
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		})
+
 		this.setState({
 			currentPage: Number(event.target.id)
 		})
@@ -41,6 +47,21 @@ export default class SearchPage extends Component {
 	searchButtonHandler = async () => {
 		try {
 			const response = await axiosConfig.get('/region/' + this.state.region + '?text=' + this.state.searchQuery)
+			let vacancy = []
+			vacancy.push(...response.data.results.vacancies)
+			this.setState({
+				pageTitle: 'Вакансии по запросу "' + this.state.searchQuery + '":',
+				vacancy: vacancy,
+				currentPage: 1
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	async componentDidMount() {
+		try {
+			const response = await axiosConfig.get('region/' + this.state.region + '?offset=1&limit=100&modifiedFrom=2020-06-10T15:00:00Z')
 			let vacancy = []
 			vacancy.push(...response.data.results.vacancies)
 			this.setState({
@@ -108,6 +129,7 @@ export default class SearchPage extends Component {
 					searchInput={this.searchInputHandler}
 					searchButton={this.searchButtonHandler}
 				/>
+				<span className="d-block font-weight-bold pageTitle mb-2">{this.state.pageTitle}</span>
 				{
 					this.state.vacancy.length > 10
 						?
