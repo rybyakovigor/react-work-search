@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --pageHeight: calc(100vh - 112px);
+}
+
+.SearchPage {
+  min-height: var(--pageHeight);
+}
