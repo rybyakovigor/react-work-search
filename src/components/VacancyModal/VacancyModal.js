@@ -104,11 +104,17 @@ const VacancyModal = (props) => {
 						<span className="mr-2">Адрес:</span><span>{props.data.addresses.address["0"].location}</span>
 					</p>
 
-					<VacancyMap
-						x={props.data.addresses.address["0"].lat}
-						y={props.data.addresses.address["0"].lng}
-					/>
+					{
+						props.data.addresses.address["0"].lat & props.data.addresses.address["0"].lng ?
+							<VacancyMap
+								x={props.data.addresses.address["0"].lat}
+								y={props.data.addresses.address["0"].lng}
+							/>
+							: null
+					}
+
 				</Modal.Body>
+
 				<Modal.Footer>
 					<span className="font-weight-lighter">Вакансия обновлена: {prepareDate(props.data["modify-date"])}</span>
 				</Modal.Footer>
