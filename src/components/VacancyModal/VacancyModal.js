@@ -4,6 +4,12 @@ import VacancyMap from "../VacancyMap/VacancyMap";
 
 const VacancyModal = (props) => {
 
+	function prepareDate(date) {
+		date.slice(0, 10)
+		date = date.substr(8, 2) + '.' + date.substr(5, 2) + '.' + date.substr(0, 4)
+		return date
+	}
+
 	return (
 		<React.Fragment>
 			<Modal show={props.open} onHide={props.handleClose} centered size={"lg"}>
@@ -26,7 +32,7 @@ const VacancyModal = (props) => {
 						<br/>
 						<span className="mr-2">Сфера деятельности:</span><span>{props.data.category.specialisation}</span>
 						<br/>
-						<span className="mr-2">Зарплата:</span><span>{props.data.salary} {props.data.currency}</span>
+						<span className="mr-2">Зарплата:</span><span>{props.data.salary} {props.data.currency.slice(1, 5)}</span>
 						<br/>
 						<span className="mr-2">График работы:</span><span>{props.data.schedule}</span>
 						<br/>
@@ -103,7 +109,9 @@ const VacancyModal = (props) => {
 						y={props.data.addresses.address["0"].lng}
 					/>
 				</Modal.Body>
-
+				<Modal.Footer>
+					<span className="font-weight-lighter">Вакансия обновлена: {prepareDate(props.data["modify-date"])}</span>
+				</Modal.Footer>
 			</Modal>
 		</React.Fragment>
 	)
