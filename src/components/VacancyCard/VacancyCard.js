@@ -10,8 +10,10 @@ const VacancyCard = (props) => {
 		<Card border="secondary" className="mb-3">
 			<Card.Header className="d-flex justify-content-between">
 				<Card.Title className="mb-0 w-75">{props.data["job-name"]}</Card.Title>
-				<span className="d-inline-block font-weight-bolder text-right">{props.data.salary}</span>
-				{/*ToDo: Если зарплата не указана - выводить строку 'Не указана' с классом 'text-muted'*/}
+				{props.data.salary ?
+					<span className="d-inline-block font-weight-bolder text-right">{props.data.salary}</span>
+					:
+					<span className="text-muted">Не указана</span>}
 			</Card.Header>
 			<Card.Body>
 				<Card.Text>
