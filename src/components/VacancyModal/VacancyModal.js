@@ -10,6 +10,25 @@ const VacancyModal = (props) => {
 		return date
 	}
 
+	let yearText = ''
+
+	// eslint-disable-next-line default-case
+	switch (props.data.requirement.experience) {
+		case 1:
+			yearText = ' год'
+			break;
+		case 2:
+		case 3:
+		case 4:
+			yearText = ' года'
+			break;
+		case 5:
+		case 6:
+			yearText = ' лет'
+			break;
+
+	}
+
 	return (
 		<React.Fragment>
 			<Modal show={props.open} onHide={props.handleClose} centered size={"lg"}>
@@ -22,8 +41,15 @@ const VacancyModal = (props) => {
 
 				<Modal.Body>
 					<p>
-						<span className="d-inline-block mb-1 font-weight-light">{props.data.company.name}</span>
+						<span className="font-weight-light">{props.data.company.name}</span>
 						<br/>
+						{props.data.company.site ?
+							<React.Fragment>
+								<a className="d-inline-block mb-1" href={props.data.company.site}
+									 target="_blank" rel="noopener noreferrer">{props.data.company.site}</a>
+								<br/>
+							</React.Fragment>
+							: null}
 						<span className="font-weight-light">{props.data.source}</span>
 					</p>
 
@@ -32,22 +58,21 @@ const VacancyModal = (props) => {
 						<br/>
 						<span className="mr-2">Сфера деятельности:</span><span>{props.data.category.specialisation}</span>
 						<br/>
-						<span className="mr-2">Зарплата:</span><span>{props.data.salary} {props.data.currency.slice(1, 5)}</span>
+						<span className="mr-2">Зарплата:</span>
+						{props.data.salary ? <span>{props.data.salary} {props.data.currency.slice(1, 5)}</span> :
+							<span>Не указана</span>}
 						<br/>
 						<span className="mr-2">График работы:</span><span>{props.data.schedule}</span>
 						<br/>
 						<span className="mr-2">Тип занятости:</span><span>{props.data.employment}</span>
-						{
-							props.data.term
-								?
-								<React.Fragment>
-									<br/>
-									<span className="mr-2">Бонусы:</span>
-									<span>{props.data.term.text}</span>
-								</React.Fragment>
-								:
-								null
-						}
+						{props.data.term ?
+							<React.Fragment>
+								<br/>
+								<span className="mr-2">Бонусы:</span>
+								<span>{props.data.term.text}</span>
+							</React.Fragment>
+							:
+							null}
 					</p>
 
 					<hr/>
@@ -64,16 +89,19 @@ const VacancyModal = (props) => {
 						<b className="d-inline-block mb-1">Требования:</b>
 						<br/>
 						<span className="mr-2">Опыт работы:</span>
-						{
-							props.data.requirement.experience === 0
-								?
-								<span>Без опыта</span>
-								:
-								<span>{props.data.requirement.experience} года</span>
-						}
-						{/*ToDo: сделать склонения слова 'год' в зависимости от числа*/}
+						{props.data.requirement.experience === 0 || props.data.requirement.experience == 'от 0' ?
+							<span>Без опыта</span>
+							:
+							<span>
+								{props.data.requirement.experience}
+								{yearText}
+								</span>}
 						<br/>
-						<span className="mr-2">Образование:</span><span>{props.data.requirement.education}</span>
+						<span className="mr-2">Образование:</span>
+						{props.data.requirement.education ?
+							<span>{props.data.requirement.education}</span>
+							:
+							<span>Не указано</span>}
 						<br/>
 						<span className="mr-2">Профессиональные качества:</span><span>{props.data.requirement.qualification}</span>
 					</p>
@@ -84,40 +112,32 @@ const VacancyModal = (props) => {
 						<b className="d-inline-block mb-1">Контактная информация:</b>
 						<br/>
 						<span className="mr-2">Телефон:</span>
-						{
-							props.data.company.phone
-								?
-								<a href={"tel:" + props.data.company.phone}>{props.data.company.phone}</a>
-								:
-								<span>Не указан</span>
-						}
+						{props.data.company.phone ?
+							<a href={"tel:" + props.data.company.phone}>{props.data.company.phone}</a>
+							:
+							<span>Не указан</span>}
 						<br/>
 						<span className="mr-2">E-mail:</span>
-						{
-							props.data.company.email
-								?
-								<a href={'mailto:' + props.data.company.email}>{props.data.company.email}</a>
-								:
-								<span>Не указан</span>
-						}
+						{props.data.company.email ?
+							<a href={'mailto:' + props.data.company.email}>{props.data.company.email}</a>
+							:
+							<span>Не указан</span>}
 						<br/>
 						<span className="mr-2">Адрес:</span><span>{props.data.addresses.address["0"].location}</span>
 					</p>
 
-					{
-						props.data.addresses.address["0"].lat & props.data.addresses.address["0"].lng ?
-							<VacancyMap
-								x={props.data.addresses.address["0"].lat}
-								y={props.data.addresses.address["0"].lng}
-							/>
-							: null
-					}
-
+					{props.data.addresses.address["0"].lat & props.data.addresses.address["0"].lng ?
+						<VacancyMap
+							x={props.data.addresses.address["0"].lat}
+							y={props.data.addresses.address["0"].lng}
+						/>
+						: null}
 				</Modal.Body>
 
 				<Modal.Footer>
 					<span className="font-weight-lighter">Вакансия обновлена: {prepareDate(props.data["modify-date"])}</span>
 				</Modal.Footer>
+
 			</Modal>
 		</React.Fragment>
 	)
