@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 import Layout from "./hoc/Layout/Layout";
 import Header from "./components/Header/Header";
 import SearchPage from "./containers/SearchPage/SearchPage";
