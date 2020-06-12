@@ -8,7 +8,7 @@ import VacancyPagePagination from "../../components/VacancyPagePagination/Vacanc
 export default class SearchPage extends Component {
 
 	state = {
-		pageTitle: 'Вакансии, обновленные за последние сутки:',
+		pageTitle: 'Вакансии, обновленные сегодня:',
 		searchQuery: '',
 		vacancy: [],
 		vacancyDetail: null,
@@ -18,6 +18,11 @@ export default class SearchPage extends Component {
 		currentPage: 1,
 		vacancyPerPage: 10
 	}
+
+	date = new Date()
+	currentDay = this.date.getDate() - 1
+	currentMonth = this.date.getMonth() + 1
+	currentYear = this.date.getFullYear()
 
 	paginationClickHandler = (event) => {
 
@@ -32,7 +37,6 @@ export default class SearchPage extends Component {
 	}
 
 	modalOpenHandler = (data) => {
-		console.log(data)
 		this.setState({
 			vacancyOpen: true
 		})
@@ -61,7 +65,8 @@ export default class SearchPage extends Component {
 
 	async componentDidMount() {
 		try {
-			const response = await axiosConfig.get('region/' + this.state.region + '?offset=1&limit=100&modifiedFrom=2020-06-10T15:00:00Z')
+			const response = await axiosConfig
+				.get('region/' + this.state.region + '?offset=1&limit=100&modifiedFrom=' + this.currentYear + '-' + this.currentMonth + '-' + this.currentDay + 'T00:00:00Z')
 			let vacancy = []
 			vacancy.push(...response.data.results.vacancies)
 			this.setState({
@@ -79,25 +84,6 @@ export default class SearchPage extends Component {
 		})
 	}
 
-	renderVacancyCards() {
-		return this.state.vacancy.map((vacancy) => {
-			return (
-				<VacancyCard
-					key={vacancy.vacancy.id}
-					data={vacancy.vacancy}
-					openVacancy={() => {
-						console.log(vacancy.vacancy)
-						this.setState({
-							vacancyDetail: vacancy.vacancy,
-							vacancyOpen: true
-						})
-						console.log(this.state.vacancyDetail)
-					}}
-				/>
-			)
-		})
-	}
-
 	renderVacancyPerPage() {
 		const vacancy = this.state.vacancy
 		const indexOfLastVacancy = this.state.currentPage * this.state.vacancyPerPage
@@ -110,12 +96,10 @@ export default class SearchPage extends Component {
 					key={vacancy.vacancy.id}
 					data={vacancy.vacancy}
 					openVacancy={() => {
-						console.log(vacancy.vacancy)
 						this.setState({
 							vacancyDetail: vacancy.vacancy,
 							vacancyOpen: true
 						})
-						console.log(this.state.vacancyDetail)
 					}}
 				/>
 			)
@@ -123,42 +107,45 @@ export default class SearchPage extends Component {
 	}
 
 	render() {
+
 		return (
+
 			<div className="pt-3 pb-3 SearchPage">
 				<VacancySearchInput
 					searchInput={this.searchInputHandler}
 					searchButton={this.searchButtonHandler}
 				/>
-				<span className="d-block font-weight-bold pageTitle mb-2">{this.state.pageTitle}</span>
-				{
-					this.state.vacancy.length > 10
-						?
-						<VacancyPagePagination
-							data={this.state.vacancy}
-							currentPage={this.state.currentPage}
-							click={this.paginationClickHandler}
-						/>
-						: null
-				}
+
+				<span className="d-block font-weight-bold pageTitle mb-3">{this.state.pageTitle}</span>
+
+				{this.state.vacancy.length > 10
+					?
+					<VacancyPagePagination
+						data={this.state.vacancy}
+						currentPage={this.state.currentPage}
+						click={this.paginationClickHandler}
+					/>
+					: null}
 
 				{this.renderVacancyPerPage()}
 
-				{this.state.vacancyDetail ? <VacancyModal
-					open={this.state.vacancyOpen}
-					handleClose={this.modalCloseHandler}
-					handleShow={this.modalOpenHandler}
-					data={this.state.vacancyDetail}
-				/> : null}
-				{
-					this.state.vacancy.length > 10
-						?
-						<VacancyPagePagination
-							data={this.state.vacancy}
-							currentPage={this.state.currentPage}
-							click={this.paginationClickHandler}
-						/>
-						: null
-				}
+				{this.state.vacancyDetail
+					?
+					<VacancyModal
+						open={this.state.vacancyOpen}
+						handleClose={this.modalCloseHandler}
+						handleShow={this.modalOpenHandler}
+						data={this.state.vacancyDetail}
+					/> : null}
+
+				{this.state.vacancy.length > 10
+					?
+					<VacancyPagePagination
+						data={this.state.vacancy}
+						currentPage={this.state.currentPage}
+						click={this.paginationClickHandler}
+					/>
+					: null}
 			</div>
 		)
 	}
