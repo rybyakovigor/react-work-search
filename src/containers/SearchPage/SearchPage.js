@@ -4,15 +4,20 @@ import axiosConfig from "../../axiosConfig";
 import VacancyCard from "../../components/VacancyCard/VacancyCard";
 import VacancyModal from "../../components/VacancyModal/VacancyModal";
 import VacancyPagePagination from "../../components/VacancyPagePagination/VacancyPagePagination";
+import SelectRegion from "../../components/SelectRegion/SelectRegion";
+import RegionListModal from "../../components/RegionListModal/RegionListModal";
+import regions from "../../regions";
 
 export default class SearchPage extends Component {
 
 	state = {
 		pageTitle: 'Вакансии, обновленные сегодня:',
 		searchQuery: '',
+		regionListOpen: false,
 		vacancy: [],
 		vacancyDetail: null,
-		region: 6600000000000,
+		region: "6600000000000",
+		regionName: "Свердловская область",
 		vacancyOpen: false,
 		vacancyOnPage: [],
 		currentPage: 1,
@@ -23,6 +28,38 @@ export default class SearchPage extends Component {
 	currentDay = this.date.getDate() - 1
 	currentMonth = this.date.getMonth() + 1
 	currentYear = this.date.getFullYear()
+
+	openRegionListModal = () => {
+		this.setState({
+			regionListOpen: true
+		})
+	}
+
+	closeRegionListModal = () => {
+		this.setState({
+			regionListOpen: false
+		})
+	}
+
+	renderRegions = () => {
+		return regions.map((region) => {
+			return (
+				<li
+					key={region.code}
+					className="regionText mb-1 text-decoration-none"
+					onClick={() => {
+						this.setState({
+							region: region.code,
+							regionName: region.name,
+							regionListOpen: false
+						})
+					}}
+				>
+					{region.name}
+				</li>
+			)
+		})
+	}
 
 	paginationClickHandler = (event) => {
 
@@ -60,6 +97,10 @@ export default class SearchPage extends Component {
 			})
 		} catch (error) {
 			console.log(error)
+			this.setState({
+				vacancy: [],
+				pageTitle: 'По вашему запросу ничего не найдено.'
+			})
 		}
 	}
 
@@ -115,8 +156,21 @@ export default class SearchPage extends Component {
 					searchInput={this.searchInputHandler}
 					searchButton={this.searchButtonHandler}
 				/>
+				<div className="d-flex flex-column align-items-start flex-md-row justify-content-md-between align-items-md-center mb-3">
+					<span className="font-weight-bold pageTitle order-1 order-md-0">{this.state.pageTitle}</span>
+					<SelectRegion
+						currentRegion={this.state.regionName}
+						openList={this.openRegionListModal}
+					/>
+				</div>
+				{this.state.regionListOpen ?
+					<RegionListModal
+						open={this.state.regionListOpen}
+						closeList={this.closeRegionListModal}
+						renderRegions={this.renderRegions}
+					/>
+					: null}
 
-				<span className="d-block font-weight-bold pageTitle mb-3">{this.state.pageTitle}</span>
 
 				{this.state.vacancy.length > 10
 					?
