@@ -31,7 +31,7 @@ const VacancyModal = (props) => {
 
 	return (
 		<React.Fragment>
-			<Modal show={props.open} onHide={props.handleClose} centered size={"lg"}>
+			<Modal scrollable show={props.open} onHide={props.handleClose} centered size={"lg"}>
 
 				<Modal.Header closeButton>
 					<Modal.Title>
@@ -80,7 +80,7 @@ const VacancyModal = (props) => {
 					<p>
 						<b className="d-inline-block mb-1">Обязанности:</b>
 						<br/>
-						<span>{(props.data.duty)}</span>
+						<span dangerouslySetInnerHTML={{__html: props.data.duty}}/>
 					</p>
 
 					<hr/>
@@ -102,8 +102,15 @@ const VacancyModal = (props) => {
 							<span>{props.data.requirement.education}</span>
 							:
 							<span>Не указано</span>}
-						<br/>
-						<span className="mr-2">Профессиональные качества:</span><span>{props.data.requirement.qualification}</span>
+						{props.data.requirement.qualification ?
+							<React.Fragment>
+								<br/>
+								<b className="d-inline-block mt-1 mb-1">Дополнительно:</b>
+								<br/>
+								<span dangerouslySetInnerHTML={{__html: props.data.requirement.qualification}}/>
+							</React.Fragment>
+							: null
+						}
 					</p>
 
 					<hr/>
