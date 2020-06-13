@@ -8,10 +8,10 @@ const VacancyCard = (props) => {
 
 	return (
 		<Card border="secondary" className="mb-3">
-			<Card.Header className="d-flex justify-content-between">
-				<Card.Title className="mb-0 w-75">{props.data["job-name"]}</Card.Title>
+			<Card.Header className="cardHeaderText d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
+				<Card.Title className="cardTitle mb-1 mb-md-0">{props.data["job-name"]}</Card.Title>
 				{props.data.salary ?
-					<span className="d-inline-block font-weight-bolder text-right">{props.data.salary}</span>
+					<span className="d-inline-block font-weight-bolder text-md-right">{props.data.salary}</span>
 					:
 					<span className="text-muted">Не указана</span>}
 			</Card.Header>
@@ -22,13 +22,9 @@ const VacancyCard = (props) => {
 					<span>{props.data.addresses.address["0"].location}</span>
 				</Card.Text>
 			</Card.Body>
-			<Card.Footer className="text-muted d-flex justify-content-between">
-				<Button onClick={props.openVacancy}>Открыть вакансию</Button>
-				<Card.Text className="d-flex flex-column justify-content-center">
-					<span>
-						Дата публикации: {vacancyDate}
-					</span>
-				</Card.Text>
+			<Card.Footer className="text-muted d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+				<Button className="order-1 order-sm-0" onClick={props.openVacancy}>Открыть вакансию</Button>
+				<span className="order-0 order-sm-1 mb-2 mb-sm-0">Дата публикации: {vacancyDate}</span>
 			</Card.Footer>
 		</Card>
 	)
