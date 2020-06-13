@@ -1,0 +1,78 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+:root {
+  --pageHeight: calc(100vh - 96px);
+}
+
+.SearchPage {
+  min-height: var(--pageHeight);
+}
+
+.pageTitle {
+  font-size: 24px;
+  @include media-breakpoint-down(lg) {
+    font-size: 22px;
+  }
+  @include media-breakpoint-down(md) {
+    font-size: 18px;
+  }
+}
+
+.footer {
+  @include media-breakpoint-down(lg) {
+    font-size: 15px;
+  }
+  @include media-breakpoint-down(md) {
+    font-size: 14px;
+  }
+}
+
+.cardHeaderText {
+  @include media-breakpoint-down(lg) {
+    font-size: 15px;
+  }
+  @include media-breakpoint-down(md) {
+    font-size: 14px;
+  }
+}
+
+.cardTitle {
+  width: 75%;
+  @include media-breakpoint-down(md) {
+    width: 100%;
+  }
+}
+
+.regionText {
+  text-decoration: underline;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline !important;
+    opacity: 0.8;
+  }
+
+  @include media-breakpoint-down(lg) {
+    font-size: 15px;
+  }
+  @include media-breakpoint-down(md) {
+    font-size: 13px;
+  }
+}
+
+.regionList {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-flow: column wrap;
+  align-content: space-between;
+  height: 700px;
+  @include media-breakpoint-down(lg) {
+    height: 820px;
+  }
+  @include media-breakpoint-down(md) {
+    height: 1000px;
+  }
+}
