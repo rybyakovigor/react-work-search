@@ -89,7 +89,7 @@ const VacancyModal = (props) => {
 						<b className="d-inline-block mb-1">Требования:</b>
 						<br/>
 						<span className="mr-2">Опыт работы:</span>
-						{props.data.requirement.experience === 0 || props.data.requirement.experience == 'от 0' ?
+						{props.data.requirement.experience === 0 || props.data.requirement.experience === 'от 0' ?
 							<span>Без опыта</span>
 							:
 							<span>
