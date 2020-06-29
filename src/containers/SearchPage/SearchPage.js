@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import axiosConfig from "../../axiosConfig";
-import SelectRegion from "../../components/SelectRegion/SelectRegion";
-import VacancyCard from "../../components/VacancyCard/VacancyCard";
-import VacancyModal from "../../components/VacancyModal/VacancyModal";
-import VacancyPagePagination from "../../components/VacancyPagePagination/VacancyPagePagination";
-import VacancySearchInput from "../../components/VacancySearchInput/VacancySearchInput";
-import RegionListModal from "../../components/RegionListModal/RegionListModal";
-import regions from "../../regions";
+import React, {Component} from "react"
+import {connect} from "react-redux"
+import axiosConfig from "../../axiosConfig"
+import SelectRegion from "../../components/SelectRegion/SelectRegion"
+import VacancyCard from "../../components/VacancyCard/VacancyCard"
+import VacancyModal from "../../components/VacancyModal/VacancyModal"
+import VacancyPagePagination from "../../components/VacancyPagePagination/VacancyPagePagination"
+import VacancySearchInput from "../../components/VacancySearchInput/VacancySearchInput"
+import RegionListModal from "../../components/RegionListModal/RegionListModal"
+import regions from "../../regions"
 
-export default class SearchPage extends Component {
+class SearchPage extends Component {
   state = {
-    pageTitle: "Вакансии, обновленные сегодня:",
+    // pageTitle: "Вакансии, обновленные сегодня:",
     searchQuery: "",
     regionListOpen: false,
     vacancy: [],
@@ -23,22 +24,22 @@ export default class SearchPage extends Component {
     vacancyPerPage: 10,
   };
 
-  date = new Date();
-  currentDay = this.date.getDate() - 1;
-  currentMonth = this.date.getMonth() + 1;
-  currentYear = this.date.getFullYear();
+  date = new Date()
+  currentDay = this.date.getDate() - 1
+  currentMonth = this.date.getMonth() + 1
+  currentYear = this.date.getFullYear()
 
   openRegionListModal = () => {
     this.setState({
-      regionListOpen: true,
-    });
-  };
+      regionListOpen: true
+    })
+  }
 
   closeRegionListModal = () => {
     this.setState({
-      regionListOpen: false,
-    });
-  };
+      regionListOpen: false
+    })
+  }
 
   renderRegions = () => {
     return regions.map((region) => {
@@ -50,59 +51,59 @@ export default class SearchPage extends Component {
             this.setState({
               region: region.code,
               regionName: region.name,
-              regionListOpen: false,
-            });
+              regionListOpen: false
+            })
           }}
         >
           {region.name}
         </li>
-      );
-    });
-  };
+      )
+    })
+  }
 
   paginationClickHandler = (event) => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
-    });
+      behavior: "smooth"
+    })
 
     this.setState({
-      currentPage: Number(event.target.id),
-    });
-  };
+      currentPage: Number(event.target.id)
+    })
+  }
 
   modalOpenHandler = (data) => {
     this.setState({
-      vacancyOpen: true,
-    });
-  };
+      vacancyOpen: true
+    })
+  }
 
   modalCloseHandler = () => {
     this.setState({
-      vacancyOpen: false,
-    });
-  };
+      vacancyOpen: false
+    })
+  }
 
   searchButtonHandler = async () => {
     try {
       const response = await axiosConfig.get(
         "/region/" + this.state.region + "?text=" + this.state.searchQuery
-      );
-      let vacancy = [];
-      vacancy.push(...response.data.results.vacancies);
+      )
+      let vacancy = []
+      vacancy.push(...response.data.results.vacancies)
       this.setState({
         pageTitle: 'Вакансии по запросу "' + this.state.searchQuery + '":',
         vacancy: vacancy,
-        currentPage: 1,
-      });
+        currentPage: 1
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
       this.setState({
         vacancy: [],
-        pageTitle: "По вашему запросу ничего не найдено.",
-      });
+        pageTitle: "По вашему запросу ничего не найдено."
+      })
     }
-  };
+  }
 
   async componentDidMount() {
     try {
@@ -116,39 +117,39 @@ export default class SearchPage extends Component {
           "-" +
           this.currentDay +
           "T00:00:00Z"
-      );
-      let vacancy = [];
-      vacancy.push(...response.data.results.vacancies);
+      )
+      let vacancy = []
+      vacancy.push(...response.data.results.vacancies)
       this.setState({
         vacancy: vacancy,
-        currentPage: 1,
-      });
+        currentPage: 1
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   searchInputHandler = (event) => {
     this.setState({
-      searchQuery: event.target.value,
-    });
-  };
+      searchQuery: event.target.value
+    })
+  }
 
   searchInputKeyHandler = (event) => {
     if (event.which === 13 || event.keyCode === 13) {
-      this.searchButtonHandler();
+      this.searchButtonHandler()
     }
-  };
+  }
 
   renderVacancyPerPage() {
-    const vacancy = this.state.vacancy;
+    const vacancy = this.state.vacancy
     const indexOfLastVacancy =
-      this.state.currentPage * this.state.vacancyPerPage;
-    const indentOfFirstVacancy = indexOfLastVacancy - this.state.vacancyPerPage;
+      this.state.currentPage * this.state.vacancyPerPage
+    const indentOfFirstVacancy = indexOfLastVacancy - this.state.vacancyPerPage
     const currentVacancy = vacancy.slice(
       indentOfFirstVacancy,
       indexOfLastVacancy
-    );
+    )
 
     return currentVacancy.map((vacancy) => {
       return (
@@ -158,12 +159,12 @@ export default class SearchPage extends Component {
           openVacancy={() => {
             this.setState({
               vacancyDetail: vacancy.vacancy,
-              vacancyOpen: true,
-            });
+              vacancyOpen: true
+            })
           }}
         />
-      );
-    });
+      )
+    })
   }
 
   render() {
@@ -176,7 +177,7 @@ export default class SearchPage extends Component {
         />
         <div className="d-flex flex-column align-items-start flex-md-row justify-content-md-between align-items-md-center mb-3">
           <span className="font-weight-bold pageTitle order-1 order-md-0">
-            {this.state.pageTitle}
+            {this.props.pageTitle}
           </span>
           <SelectRegion
             currentRegion={this.state.regionName}
@@ -218,6 +219,14 @@ export default class SearchPage extends Component {
           />
         ) : null}
       </div>
-    );
+    )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    pageTitle: state.pageTitle
+  }
+}
+
+export default connect(mapStateToProps)(SearchPage)
