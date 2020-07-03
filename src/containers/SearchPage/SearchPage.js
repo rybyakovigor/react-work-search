@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
-import axiosConfig from "../../axiosConfig"
+import Loader from "../../components/Loader/Loader"
 import SelectRegion from "../../components/SelectRegion/SelectRegion"
 import VacancyCard from "../../components/VacancyCard/VacancyCard"
 import VacancyModal from "../../components/VacancyModal/VacancyModal"
@@ -8,38 +8,22 @@ import VacancyPagePagination from "../../components/VacancyPagePagination/Vacanc
 import VacancySearchInput from "../../components/VacancySearchInput/VacancySearchInput"
 import RegionListModal from "../../components/RegionListModal/RegionListModal"
 import regions from "../../regions"
+import {
+  searchInputHandler,
+  openRegionListModal,
+  closeRegionListModal,
+  selectRegion,
+  paginationClickHandler,
+  fetchVacancys,
+  openVacancyHandler,
+  closeVacancyHandler,
+} from "../../store/actions/actions"
 
 class SearchPage extends Component {
-  state = {
-    // pageTitle: "Вакансии, обновленные сегодня:",
-    searchQuery: "",
-    regionListOpen: false,
-    vacancy: [],
-    vacancyDetail: null,
-    region: "6600000000000",
-    regionName: "Свердловская область",
-    vacancyOpen: false,
-    vacancyOnPage: [],
-    currentPage: 1,
-    vacancyPerPage: 10,
-  };
-
-  date = new Date()
+  date = new Date() // TODO: Вынести в отдельный файл
   currentDay = this.date.getDate() - 1
   currentMonth = this.date.getMonth() + 1
   currentYear = this.date.getFullYear()
-
-  openRegionListModal = () => {
-    this.setState({
-      regionListOpen: true
-    })
-  }
-
-  closeRegionListModal = () => {
-    this.setState({
-      regionListOpen: false
-    })
-  }
 
   renderRegions = () => {
     return regions.map((region) => {
@@ -47,13 +31,7 @@ class SearchPage extends Component {
         <li
           key={region.code}
           className="regionText mb-1 text-decoration-none"
-          onClick={() => {
-            this.setState({
-              region: region.code,
-              regionName: region.name,
-              regionListOpen: false
-            })
-          }}
+          onClick={() => this.props.selectRegion(region)}
         >
           {region.name}
         </li>
@@ -61,107 +39,22 @@ class SearchPage extends Component {
     })
   }
 
-  paginationClickHandler = (event) => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    })
-
-    this.setState({
-      currentPage: Number(event.target.id)
-    })
-  }
-
-  modalOpenHandler = (data) => {
-    this.setState({
-      vacancyOpen: true
-    })
-  }
-
-  modalCloseHandler = () => {
-    this.setState({
-      vacancyOpen: false
-    })
-  }
-
-  searchButtonHandler = async () => {
-    try {
-      const response = await axiosConfig.get(
-        "/region/" + this.state.region + "?text=" + this.state.searchQuery
-      )
-      let vacancy = []
-      vacancy.push(...response.data.results.vacancies)
-      this.setState({
-        pageTitle: 'Вакансии по запросу "' + this.state.searchQuery + '":',
-        vacancy: vacancy,
-        currentPage: 1
-      })
-    } catch (error) {
-      console.log(error)
-      this.setState({
-        vacancy: [],
-        pageTitle: "По вашему запросу ничего не найдено."
-      })
-    }
-  }
-
   async componentDidMount() {
-    try {
-      const response = await axiosConfig.get(
-        "region/" +
-          this.state.region +
-          "?offset=1&limit=100&modifiedFrom=" +
-          this.currentYear +
-          "-" +
-          this.currentMonth +
-          "-" +
-          this.currentDay +
-          "T00:00:00Z"
-      )
-      let vacancy = []
-      vacancy.push(...response.data.results.vacancies)
-      this.setState({
-        vacancy: vacancy,
-        currentPage: 1
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  searchInputHandler = (event) => {
-    this.setState({
-      searchQuery: event.target.value
-    })
-  }
-
-  searchInputKeyHandler = (event) => {
-    if (event.which === 13 || event.keyCode === 13) {
-      this.searchButtonHandler()
-    }
+    this.props.fetchVacancys(this.props.region, "", this.currentYear, this.currentMonth, this.currentDay)
   }
 
   renderVacancyPerPage() {
-    const vacancy = this.state.vacancy
-    const indexOfLastVacancy =
-      this.state.currentPage * this.state.vacancyPerPage
-    const indentOfFirstVacancy = indexOfLastVacancy - this.state.vacancyPerPage
-    const currentVacancy = vacancy.slice(
-      indentOfFirstVacancy,
-      indexOfLastVacancy
-    )
+    const vacancy = this.props.vacancys
+    const indexOfLastVacancy = this.props.currentPage * this.props.vacancyPerPage
+    const indentOfFirstVacancy = indexOfLastVacancy - this.props.vacancyPerPage
+    const currentVacancy = vacancy.slice(indentOfFirstVacancy, indexOfLastVacancy)
 
     return currentVacancy.map((vacancy) => {
       return (
         <VacancyCard
           key={vacancy.vacancy.id}
           data={vacancy.vacancy}
-          openVacancy={() => {
-            this.setState({
-              vacancyDetail: vacancy.vacancy,
-              vacancyOpen: true
-            })
-          }}
+          openVacancy={() => this.props.openVacancyHandler(vacancy)}
         />
       )
     })
@@ -171,53 +64,56 @@ class SearchPage extends Component {
     return (
       <div className="pt-3 pb-3 SearchPage">
         <VacancySearchInput
-          keyHandler={this.searchInputKeyHandler}
-          searchInput={this.searchInputHandler}
-          searchButton={this.searchButtonHandler}
+          keyHandler={(event) =>
+            event.key === "Enter" ? this.props.fetchVacancys(this.props.region, this.props.searchQuery) : null
+          }
+          searchInput={(event) => this.props.searchInputHandler(event)}
+          searchButton={() => this.props.fetchVacancys(this.props.region, this.props.searchQuery)}
         />
-        <div className="d-flex flex-column align-items-start flex-md-row justify-content-md-between align-items-md-center mb-3">
-          <span className="font-weight-bold pageTitle order-1 order-md-0">
-            {this.props.pageTitle}
-          </span>
-          <SelectRegion
-            currentRegion={this.state.regionName}
-            openList={this.openRegionListModal}
-          />
-        </div>
-        {this.state.regionListOpen ? (
-          <RegionListModal
-            open={this.state.regionListOpen}
-            closeList={this.closeRegionListModal}
-            renderRegions={this.renderRegions}
-          />
-        ) : null}
 
-        {this.state.vacancy.length > 10 ? (
-          <VacancyPagePagination
-            data={this.state.vacancy}
-            currentPage={this.state.currentPage}
-            click={this.paginationClickHandler}
-          />
-        ) : null}
+        {this.props.loading ? (
+          <Loader />
+        ) : (
+          <React.Fragment>
+            <div className="d-flex flex-column align-items-start flex-md-row justify-content-md-between align-items-md-center mb-3">
+              <span className="font-weight-bold pageTitle order-1 order-md-0">{this.props.pageTitle}</span>
+              <SelectRegion currentRegion={this.props.regionName} openList={this.props.openRegionListModal} />
+            </div>
+            {this.props.regionListOpen ? (
+              <RegionListModal
+                open={this.props.regionListOpen}
+                closeList={this.props.closeRegionListModal}
+                renderRegions={this.renderRegions}
+              />
+            ) : null}
 
-        {this.renderVacancyPerPage()}
+            {this.props.vacancys.length > 10 ? (
+              <VacancyPagePagination
+                data={this.props.vacancys}
+                currentPage={this.props.currentPage}
+                click={(event) => this.props.paginationClickHandler(event)}
+              />
+            ) : null}
 
-        {this.state.vacancyDetail ? (
-          <VacancyModal
-            open={this.state.vacancyOpen}
-            handleClose={this.modalCloseHandler}
-            handleShow={this.modalOpenHandler}
-            data={this.state.vacancyDetail}
-          />
-        ) : null}
+            {this.renderVacancyPerPage()}
 
-        {this.state.vacancy.length > 10 ? (
-          <VacancyPagePagination
-            data={this.state.vacancy}
-            currentPage={this.state.currentPage}
-            click={this.paginationClickHandler}
-          />
-        ) : null}
+            {this.props.vacancyDetail ? (
+              <VacancyModal
+                open={this.props.vacancyOpen}
+                close={this.props.closeVacancyHandler}
+                data={this.props.vacancyDetail}
+              />
+            ) : null}
+
+            {this.props.vacancys.length > 10 ? (
+              <VacancyPagePagination
+                data={this.props.vacancys}
+                currentPage={this.props.currentPage}
+                click={(event) => this.props.paginationClickHandler(event)}
+              />
+            ) : null}
+          </React.Fragment>
+        )}
       </div>
     )
   }
@@ -225,8 +121,32 @@ class SearchPage extends Component {
 
 function mapStateToProps(state) {
   return {
-    pageTitle: state.pageTitle
+    pageTitle: state.pageTitle,
+    searchQuery: state.searchQuery,
+    regionListOpen: state.regionListOpen,
+    vacancys: state.vacancys,
+    region: state.region,
+    regionName: state.regionName,
+    vacancyOpen: state.vacancyOpen,
+    vacancyDetail: state.vacancyDetail,
+    currentPage: state.currentPage,
+    vacancyPerPage: state.vacancyPerPage,
+    loading: state.loading,
   }
 }
 
-export default connect(mapStateToProps)(SearchPage)
+function mapDispatchToProps(dispatch) {
+  return {
+    searchInputHandler: (event) => dispatch(searchInputHandler(event)),
+    openRegionListModal: () => dispatch(openRegionListModal()),
+    closeRegionListModal: () => dispatch(closeRegionListModal()),
+    selectRegion: (region) => dispatch(selectRegion(region)),
+    paginationClickHandler: (event) => dispatch(paginationClickHandler(event)),
+    fetchVacancys: (region, searchQuery, year, month, day) =>
+      dispatch(fetchVacancys(region, searchQuery, year, month, day)),
+    openVacancyHandler: (vacancy) => dispatch(openVacancyHandler(vacancy)),
+    closeVacancyHandler: () => dispatch(closeVacancyHandler())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage)
