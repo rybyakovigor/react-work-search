@@ -21,7 +21,6 @@ const initialState = {
   region: "6600000000000",
   regionName: "Свердловская область",
   vacancyOpen: false,
-  vacancyOnPage: [], // TODO: Проверить, где используется
   currentPage: 1,
   vacancyPerPage: 10,
   loading: false
