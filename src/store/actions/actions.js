@@ -45,7 +45,6 @@ export function selectRegion(region) {
 // Клик по пагинации
 export function paginationClickHandler(event) {
   window.scrollTo({
-    // TODO: попробовать скролл с якорем
     top: 0,
     behavior: "smooth"
   })

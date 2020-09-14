@@ -20,7 +20,7 @@ import {
 } from "../../store/actions/actions"
 
 class SearchPage extends Component {
-  date = new Date() // TODO: Вынести в отдельный файл
+  date = new Date()
   currentDay = this.date.getDate() - 1
   currentMonth = this.date.getMonth() + 1
   currentYear = this.date.getFullYear()
