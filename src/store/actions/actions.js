@@ -4,10 +4,10 @@ import {
   CLOSE_REGION_LIST_MODAL,
   SELECT_REGION,
   PAGINATION_CLICK_HANDLER,
-  FETCH_VACANCYS_START,
-  FETCH_VACANCYS_ERROR,
-  FETCH_VACANCYS_SUCCESS_EMPTY,
-  FETCH_VACANCYS_SUCCESS_QUERY,
+  FETCH_VACANCIES_START,
+  FETCH_VACANCIES_ERROR,
+  FETCH_VACANCIES_SUCCESS_EMPTY,
+  FETCH_VACANCIES_SUCCESS_QUERY,
   OPEN_VACANCY_HANDLER,
   CLOSE_VACANCY_HANDLER
 } from "./actionTypes"
@@ -56,56 +56,56 @@ export function paginationClickHandler(event) {
 }
 
 // Запрос вакансий
-export function fetchVacancys(region, searchQuery, year, month, day) {
+export function fetchVacancies(region, searchQuery, year, month, day) {
   return async (dispatch) => {
-    dispatch(fetchVacancysStart())
+    dispatch(fetchVacanciesStart())
 
     try {
       let response
-      let vacancys = []
+      let vacancies = []
       if (searchQuery !== "") {
         response = await axiosConfig.get("/region/" + region + "?text=" + searchQuery)
-        vacancys.push(...response.data.results.vacancies)
-        dispatch(fetchVacancysSuccessQuery(vacancys))
+        vacancies.push(...response.data.results.vacancies)
+        dispatch(fetchVacanciesSuccessQuery(vacancies))
       }
 
       if (searchQuery === "") {
         response = await axiosConfig.get(
           "region/" + region + "?offset=1&limit=100&modifiedFrom=" + year + "-" + month + "-" + day + "T00:00:00Z"
         )
-        vacancys.push(...response.data.results.vacancies)
-        dispatch(fetchVacancysSuccessEmpty(vacancys))
+        vacancies.push(...response.data.results.vacancies)
+        dispatch(fetchVacanciesSuccessEmpty(vacancies))
       }
     } catch (error) {
-      dispatch(fetchVacancysError(error))
+      dispatch(fetchVacanciesError(error))
       console.log(error)
     }
   }
 }
 
-export function fetchVacancysStart() {
+export function fetchVacanciesStart() {
   return {
-    type: FETCH_VACANCYS_START
+    type: FETCH_VACANCIES_START
   }
 }
 
-export function fetchVacancysSuccessQuery(vacancys) {
+export function fetchVacanciesSuccessQuery(vacancies) {
   return {
-    type: FETCH_VACANCYS_SUCCESS_QUERY,
-    vacancys: vacancys
+    type: FETCH_VACANCIES_SUCCESS_QUERY,
+    vacancies: vacancies
   }
 }
 
-export function fetchVacancysSuccessEmpty(vacancys) {
+export function fetchVacanciesSuccessEmpty(vacancies) {
   return {
-    type: FETCH_VACANCYS_SUCCESS_EMPTY,
-    vacancys: vacancys
+    type: FETCH_VACANCIES_SUCCESS_EMPTY,
+    vacancies: vacancies
   }
 }
 
-export function fetchVacancysError(error) {
+export function fetchVacanciesError(error) {
   return {
-    type: FETCH_VACANCYS_ERROR,
+    type: FETCH_VACANCIES_ERROR,
     error: error
   }
 }

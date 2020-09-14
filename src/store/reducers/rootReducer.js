@@ -4,10 +4,10 @@ import {
   CLOSE_REGION_LIST_MODAL,
   SELECT_REGION,
   PAGINATION_CLICK_HANDLER,
-  FETCH_VACANCYS_START,
-  FETCH_VACANCYS_ERROR,
-  FETCH_VACANCYS_SUCCESS_QUERY,
-  FETCH_VACANCYS_SUCCESS_EMPTY,
+  FETCH_VACANCIES_START,
+  FETCH_VACANCIES_ERROR,
+  FETCH_VACANCIES_SUCCESS_QUERY,
+  FETCH_VACANCIES_SUCCESS_EMPTY,
   OPEN_VACANCY_HANDLER,
   CLOSE_VACANCY_HANDLER
 } from "../actions/actionTypes"
@@ -16,7 +16,7 @@ const initialState = {
   pageTitle: "",
   searchQuery: "",
   regionListOpen: false,
-  vacancys: [], // TODO: исправить орфографическую ошибку
+  vacancies: [],
   vacancyDetail: null,
   region: "6600000000000",
   regionName: "Свердловская область",
@@ -61,34 +61,34 @@ export default function reducer(state = initialState, action) {
         currentPage: +action.event.target.id
       }
 
-    case FETCH_VACANCYS_START:
+    case FETCH_VACANCIES_START:
       return {
         ...state,
         loading: true
       }
 
-    case FETCH_VACANCYS_SUCCESS_QUERY:
+    case FETCH_VACANCIES_SUCCESS_QUERY:
       return {
         ...state,
         pageTitle: 'Вакансии по запросу "' + state.searchQuery + '":',
-        vacancys: action.vacancys,
+        vacancies: action.vacancies,
         currentPage: 1,
         loading: false
       }
 
-    case FETCH_VACANCYS_SUCCESS_EMPTY:
+    case FETCH_VACANCIES_SUCCESS_EMPTY:
       return {
         ...state,
         pageTitle: "Вакансии, обновленные сегодня:",
-        vacancys: action.vacancys,
+        vacancies: action.vacancies,
         currentPage: 1,
         loading: false
       }
 
-    case FETCH_VACANCYS_ERROR:
+    case FETCH_VACANCIES_ERROR:
       return {
         ...state,
-        vacancys: [],
+        vacancies: [],
         pageTitle: "По вашему запросу ничего не найдено.",
         loading: false
       }

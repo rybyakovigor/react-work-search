@@ -14,7 +14,7 @@ import {
   closeRegionListModal,
   selectRegion,
   paginationClickHandler,
-  fetchVacancys,
+  fetchVacancies,
   openVacancyHandler,
   closeVacancyHandler,
 } from "../../store/actions/actions"
@@ -40,11 +40,11 @@ class SearchPage extends Component {
   }
 
   async componentDidMount() {
-    this.props.fetchVacancys(this.props.region, "", this.currentYear, this.currentMonth, this.currentDay)
+    this.props.fetchVacancies(this.props.region, "", this.currentYear, this.currentMonth, this.currentDay)
   }
 
   renderVacancyPerPage() {
-    const vacancy = this.props.vacancys
+    const vacancy = this.props.vacancies
     const indexOfLastVacancy = this.props.currentPage * this.props.vacancyPerPage
     const indentOfFirstVacancy = indexOfLastVacancy - this.props.vacancyPerPage
     const currentVacancy = vacancy.slice(indentOfFirstVacancy, indexOfLastVacancy)
@@ -65,10 +65,10 @@ class SearchPage extends Component {
       <div className="pt-3 pb-3 SearchPage">
         <VacancySearchInput
           keyHandler={(event) =>
-            event.key === "Enter" ? this.props.fetchVacancys(this.props.region, this.props.searchQuery) : null
+            event.key === "Enter" ? this.props.fetchVacancies(this.props.region, this.props.searchQuery) : null
           }
           searchInput={(event) => this.props.searchInputHandler(event)}
-          searchButton={() => this.props.fetchVacancys(this.props.region, this.props.searchQuery)}
+          searchButton={() => this.props.fetchVacancies(this.props.region, this.props.searchQuery)}
         />
 
         {this.props.loading ? (
@@ -87,9 +87,9 @@ class SearchPage extends Component {
               />
             ) : null}
 
-            {this.props.vacancys.length > 10 ? (
+            {this.props.vacancies.length > 10 ? (
               <VacancyPagePagination
-                data={this.props.vacancys}
+                data={this.props.vacancies}
                 currentPage={this.props.currentPage}
                 click={(event) => this.props.paginationClickHandler(event)}
               />
@@ -105,9 +105,9 @@ class SearchPage extends Component {
               />
             ) : null}
 
-            {this.props.vacancys.length > 10 ? (
+            {this.props.vacancies.length > 10 ? (
               <VacancyPagePagination
-                data={this.props.vacancys}
+                data={this.props.vacancies}
                 currentPage={this.props.currentPage}
                 click={(event) => this.props.paginationClickHandler(event)}
               />
@@ -124,7 +124,7 @@ function mapStateToProps(state) {
     pageTitle: state.pageTitle,
     searchQuery: state.searchQuery,
     regionListOpen: state.regionListOpen,
-    vacancys: state.vacancys,
+    vacancies: state.vacancies,
     region: state.region,
     regionName: state.regionName,
     vacancyOpen: state.vacancyOpen,
@@ -142,8 +142,8 @@ function mapDispatchToProps(dispatch) {
     closeRegionListModal: () => dispatch(closeRegionListModal()),
     selectRegion: (region) => dispatch(selectRegion(region)),
     paginationClickHandler: (event) => dispatch(paginationClickHandler(event)),
-    fetchVacancys: (region, searchQuery, year, month, day) =>
-      dispatch(fetchVacancys(region, searchQuery, year, month, day)),
+    fetchVacancies: (region, searchQuery, year, month, day) =>
+      dispatch(fetchVacancies(region, searchQuery, year, month, day)),
     openVacancyHandler: (vacancy) => dispatch(openVacancyHandler(vacancy)),
     closeVacancyHandler: () => dispatch(closeVacancyHandler())
   }
