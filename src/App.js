@@ -1,10 +1,10 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Layout from "./hoc/Layout/Layout";
-import Header from "./components/Header/Header";
-import SearchPage from "./containers/SearchPage/SearchPage";
-import { Switch, Route, Redirect } from "react-router-dom";
-import Footer from "./components/Footer/Footer";
+import React from "react"
+import {Switch, Route, Redirect} from "react-router-dom"
+import "bootstrap/dist/css/bootstrap.min.css"
+import Layout from "./hoc/Layout/Layout"
+import Header from "./components/Header/Header"
+import SearchPage from "./containers/SearchPage/SearchPage"
+import Footer from "./components/Footer/Footer"
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
       </Switch>
       <Footer />
     </Layout>
-  );
+  )
 }
 
-export default App;
+export default App

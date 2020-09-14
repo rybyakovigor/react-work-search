@@ -1,6 +1,6 @@
-import React from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import React from "react"
+import Card from "react-bootstrap/Card"
+import Button from "react-bootstrap/Button"
 
 const VacancyCard = (props) => {
   let vacancyDate =
@@ -8,7 +8,7 @@ const VacancyCard = (props) => {
     "." +
     props.data["creation-date"].substr(5, 2) +
     "." +
-    props.data["creation-date"].substr(0, 4);
+    props.data["creation-date"].substr(0, 4)
 
   return (
     <Card border="secondary" className="mb-3">
@@ -40,7 +40,7 @@ const VacancyCard = (props) => {
         </span>
       </Card.Footer>
     </Card>
-  );
-};
+  )
+}
 
-export default VacancyCard;
+export default VacancyCard

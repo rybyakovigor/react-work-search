@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 const Header = () => {
 	return (
 		<Navbar bg="dark" variant="dark">
-			<Navbar.Brand href="#home">
+			<Navbar.Brand>
 				Поиск работы в РФ
 			</Navbar.Brand>
 		</Navbar>
