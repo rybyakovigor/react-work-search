@@ -14,9 +14,7 @@ const VacancyPagePagination = (props) => {
 	}
 
 	const paginationBasic = (
-		<div>
 			<Pagination className="justify-content-center justify-content-sm-end">{items}</Pagination>
-		</div>
 	);
 
 	return (
