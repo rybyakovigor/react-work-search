@@ -63,6 +63,7 @@ class SearchPage extends Component {
   render() {
     return (
       <div className="pt-3 pb-3 SearchPage">
+      <h1 className="visuallyHidden">Поиск работы в РФ</h1>
         <VacancySearchInput
           keyHandler={(event) =>
             event.key === "Enter" ? this.props.fetchVacancies(this.props.region, this.props.searchQuery) : null

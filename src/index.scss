@@ -6,6 +6,17 @@
   --pageHeight: calc(100vh - 96px);
 }
 
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0)
+}
+
 .SearchPage {
   min-height: var(--pageHeight);
 }
