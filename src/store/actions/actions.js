@@ -63,14 +63,15 @@ export function fetchVacancies(region, searchQuery, year, month, day) {
       let response
       let vacancies = []
       if (searchQuery !== "") {
-        response = await axiosConfig.get("/region/" + region + "?text=" + searchQuery)
+        response = await axiosConfig.get(`/region/${region}?text=${searchQuery}`)
         vacancies.push(...response.data.results.vacancies)
         dispatch(fetchVacanciesSuccessQuery(vacancies))
       }
 
       if (searchQuery === "") {
         response = await axiosConfig.get(
-          "region/" + region + "?offset=1&limit=100&modifiedFrom=" + year + "-" + month + "-" + day + "T00:00:00Z"
+          `region/${region}?offset=1&limit=100&modifiedFrom=${year}-${month}-${day}T00:00:00Z`
+
         )
         vacancies.push(...response.data.results.vacancies)
         dispatch(fetchVacanciesSuccessEmpty(vacancies))
