@@ -21,7 +21,7 @@ import {
 
 class SearchPage extends Component {
   date = new Date()
-  currentDay = this.date.getDate() - 1
+  currentDay = this.date.getDate() - 2
   currentMonth = this.date.getMonth() + 1
   currentYear = this.date.getFullYear()
 
