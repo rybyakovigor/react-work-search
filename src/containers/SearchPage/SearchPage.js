@@ -16,14 +16,29 @@ import {
   paginationClickHandler,
   fetchVacancies,
   openVacancyHandler,
-  closeVacancyHandler,
+  closeVacancyHandler
 } from "../../store/actions/actions"
 
 class SearchPage extends Component {
-  date = new Date()
-  currentDay = this.date.getDate() - 2
-  currentMonth = this.date.getMonth() + 1
-  currentYear = this.date.getFullYear()
+  getDate = () => {
+    const date = new Date()
+    let currentDay = date.getDate() - 5
+    let currentMonth = date.getMonth() + 1
+    const currentYear = date.getFullYear()
+
+    if (currentDay < 1) {
+      currentDay = 27
+      currentMonth = currentMonth - 1
+    }
+
+    if (currentMonth > 12) {
+      currentMonth = 1
+    }
+
+    const currentDate = `${currentYear}-${currentMonth}-${currentDay}`
+
+    return currentDate
+  }
 
   renderRegions = () => {
     return regions.map((region) => {
@@ -40,7 +55,7 @@ class SearchPage extends Component {
   }
 
   async componentDidMount() {
-    this.props.fetchVacancies(this.props.region, "", this.currentYear, this.currentMonth, this.currentDay)
+    this.props.fetchVacancies(this.props.region, "", this.getDate())
   }
 
   renderVacancyPerPage() {
@@ -63,7 +78,7 @@ class SearchPage extends Component {
   render() {
     return (
       <div className="pt-3 pb-3 SearchPage">
-      <h1 className="visuallyHidden">Поиск работы в РФ</h1>
+        <h1 className="visuallyHidden">Поиск работы в РФ</h1>
         <VacancySearchInput
           keyHandler={(event) =>
             event.key === "Enter" ? this.props.fetchVacancies(this.props.region, this.props.searchQuery) : null
@@ -132,7 +147,7 @@ function mapStateToProps(state) {
     vacancyDetail: state.vacancyDetail,
     currentPage: state.currentPage,
     vacancyPerPage: state.vacancyPerPage,
-    loading: state.loading,
+    loading: state.loading
   }
 }
 

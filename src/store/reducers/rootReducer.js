@@ -78,7 +78,7 @@ export default function reducer(state = initialState, action) {
     case FETCH_VACANCIES_SUCCESS_EMPTY:
       return {
         ...state,
-        pageTitle: "Вакансии, обновленные сегодня:",
+        pageTitle: "Вакансии, обновленные на этой неделе:",
         vacancies: action.vacancies,
         currentPage: 1,
         loading: false

@@ -55,7 +55,7 @@ export function paginationClickHandler(event) {
 }
 
 // Запрос вакансий
-export function fetchVacancies(region, searchQuery, year, month, day) {
+export function fetchVacancies(region, searchQuery, date) {
   return async (dispatch) => {
     dispatch(fetchVacanciesStart())
 
@@ -70,8 +70,7 @@ export function fetchVacancies(region, searchQuery, year, month, day) {
 
       if (searchQuery === "") {
         response = await axiosConfig.get(
-          `region/${region}?offset=1&limit=100&modifiedFrom=${year}-${month}-${day}T00:00:00Z`
-
+          `region/${region}?offset=1&limit=100&modifiedFrom=${date}T00:00:00Z`
         )
         vacancies.push(...response.data.results.vacancies)
         dispatch(fetchVacanciesSuccessEmpty(vacancies))
